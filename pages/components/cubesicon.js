@@ -9,7 +9,7 @@ const CubesIcon = () => {
 			height="400"
 			fill-rule="evenodd"
 		>
-			<g fill-rule="evenodd">
+			<g fillRule="evenodd">
 				<path d="M86.8 199v114.2h228.4V84.8H86.8V199m200.4 0v85.8h-172V113.2h172V199" />
 				<path
 					d="M286.996 199c0 46.42.047 65.469.104 42.332.057-23.137.057-61.117 0-84.4-.057-23.283-.104-4.352-.104 42.068"

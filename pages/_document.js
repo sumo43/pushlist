@@ -12,7 +12,7 @@ class MyDocument extends Document {
 				<Head>
 					<style>
 						@import
-						url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;700&family=Inter:wght@400;600;700&display=swap');
+						url(`https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;700&family=Inter:wght@400;600;700&display=swap`);
 					</style>
 					<link rel="icon" href="/icon.svg" />
 					<meta
