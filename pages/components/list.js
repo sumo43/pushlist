@@ -24,7 +24,7 @@ const List = () => {
 					size="md"
 					textAlign="center"
 				>
-					Your Cubes
+					Your Tables
 				</Heading>
 			</Flex>
 			<Flex
