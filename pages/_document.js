@@ -8,7 +8,7 @@ class MyDocument extends Document {
 
 	render() {
 		return (
-			<Html>
+			<Html height="100%">
 				<Head>
 					<style>
 						@import
@@ -21,7 +21,7 @@ class MyDocument extends Document {
 					/>
 				</Head>
 
-				<body>
+				<body height="100%">
 					<Main />
 					<NextScript />
 				</body>
