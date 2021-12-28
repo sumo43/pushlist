@@ -1,4 +1,4 @@
-import { Flex, Link, Heading, Divider } from '@chakra-ui/react';
+import { Flex, Link, Heading, Divider, Text } from '@chakra-ui/react';
 import { useAuth } from '../../lib/auth';
 import List from './list';
 
@@ -24,9 +24,13 @@ const Dashboard = () => {
 				<Flex
 					justifyContent="flex-start"
 					alignItems="center"
+					flexDir={'column'}
 					ml={10}
 					mr={10}
 				>
+					<Text fontSize="lg" color="gray.400">
+						{auth.user.email}
+					</Text>
 					<Link
 						fontSize="xl"
 						onClick={(e) => auth.signout()}
