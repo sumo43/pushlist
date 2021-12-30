@@ -5,25 +5,36 @@ import { useAuth } from '../../lib/auth';
 import { getCubes } from '../../lib/db';
 import { useState, useEffect, useRef } from 'react';
 
+const getCubesList = (cubes) => {
+	return cubes.map((cube) => {
+		return <ListItem>{cube.name}</ListItem>;
+	});
+};
+
 const CubesList = () => {
 	const [cubes, setCubes] = useState([]);
 	const auth = useAuth();
 	const countRef = useRef(0);
 
+	const snapshotHandler = (snapshot) => {
+		let dat = [];
+		snapshot.forEach((doc) => {
+			dat.push(doc.data());
+		});
+		setCubes(dat);
+	};
+
 	useEffect(() => {
-		const updateCubesData = async () => {
-			const firebase_cubes_data = [1, 2, 3];
-			const cubeslist = firebase_cubes_data.map((cube) => {
-				<ListItem>cube</ListItem>;
-			});
-			setCubes(cubeslist);
-			console.log(cubes);
-			countRef++;
-		};
-		updateCubesData();
+		getCubes(auth.user.uid, snapshotHandler);
 	}, []);
 
-	return <Flex>{cubes}</Flex>;
+	return (
+		<Flex flexDir="column">
+			{cubes.map((cube) => (
+				<ListItem key={cube.last_edited} name={cube.name}></ListItem>
+			))}
+		</Flex>
+	);
 };
 
 export default CubesList;
