@@ -15,16 +15,17 @@ import {
 } from '@chakra-ui/react';
 import { useNewItem } from '../../lib/newitem';
 import { useAuth } from '../../lib/auth';
+import { saveCube } from '../../lib/db';
 
 export const NewItemModal = (props) => {
 	const [name, setName] = useState('');
 	const [desc, setDesc] = useState('');
-	const new_item = useNewItem();
 	const handleName = (value) => setName(event.target.value);
 	const handleDesc = (value) => setDesc(event.target.value);
 	const auth = useAuth();
+
 	return (
-		<Modal isOpen={new_item.active} motionPreset="scale">
+		<Modal isOpen={props.active} motionPreset="scale">
 			<ModalOverlay>
 				<ModalContent>
 					<ModalHeader>
@@ -51,14 +52,19 @@ export const NewItemModal = (props) => {
 							<Button
 								marginRight="5"
 								onClick={() => {
-									new_item.save(name, desc, auth.user.uid);
+									saveCube(
+										name,
+										desc,
+										auth.user.uid,
+										props.setActive
+									);
 								}}
 							>
 								Save
 							</Button>
 							<Button
 								onClick={() => {
-									new_item.setActive(false);
+									props.setActive(false);
 								}}
 							>
 								Close

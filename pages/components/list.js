@@ -1,6 +1,7 @@
 import { Flex, Link, Heading, Divider } from '@chakra-ui/react';
 import { ProvideNewItem } from '../../lib/newitem';
-import ListItem from './listitem';
+import { ProvideCubes } from '../../lib/cubes';
+import CubesList from './cubeslist';
 import NewItemLink from './newitemlink';
 
 const List = () => {
@@ -38,9 +39,7 @@ const List = () => {
 					justifyContent="center"
 					flexDirection="column"
 				>
-					<ListItem name="Cube 1" link="" />
-					<ListItem name="Cube 2" link="" />
-					<ListItem name="Cube 3" link="" />
+					<CubesList />
 					<ProvideNewItem>
 						<NewItemLink />
 					</ProvideNewItem>
