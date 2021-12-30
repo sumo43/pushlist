@@ -5,26 +5,19 @@ import { useAuth } from '../../lib/auth';
 import { getCubes } from '../../lib/db';
 import { useState, useEffect, useRef } from 'react';
 
-const getCubesList = (cubes) => {
-	return cubes.map((cube) => {
-		return <ListItem>{cube.name}</ListItem>;
-	});
-};
-
 const CubesList = () => {
 	const [cubes, setCubes] = useState([]);
 	const auth = useAuth();
 	const countRef = useRef(0);
 
-	const snapshotHandler = (snapshot) => {
-		let dat = [];
-		snapshot.forEach((doc) => {
-			dat.push(doc.data());
-		});
-		setCubes(dat);
-	};
-
 	useEffect(() => {
+		const snapshotHandler = (snapshot) => {
+			let dat = [];
+			snapshot.forEach((doc) => {
+				dat.push(doc.data());
+			});
+			setCubes(dat);
+		};
 		getCubes(auth.user.uid, snapshotHandler);
 	}, []);
 
