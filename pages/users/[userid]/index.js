@@ -1,9 +1,22 @@
 import { Flex, Link, Heading, Divider, Text } from '@chakra-ui/react';
-import { useAuth } from '../../lib/auth';
-import List from './list';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../../lib/auth';
+import List from '../../components/list';
+import { useEffect } from 'react';
+import Loading from '../../components/loading';
 
 const Dashboard = () => {
 	const auth = useAuth();
+	if (auth?.user === '') {
+		return <Loading />;
+	}
+	const router = useRouter();
+	useEffect(() => {
+		console.log(auth.user);
+		if (auth.user === false) {
+			router.push('/');
+		}
+	}, []);
 	return (
 		<Flex
 			flexDirection="column"
@@ -33,7 +46,11 @@ const Dashboard = () => {
 					</Text>
 					<Link
 						fontSize="xl"
-						onClick={(e) => auth.signout()}
+						onClick={(e) => {
+							auth.setUser(false);
+							router.push('/');
+							auth.signout();
+						}}
 						textAlign="justify"
 					>
 						Sign out

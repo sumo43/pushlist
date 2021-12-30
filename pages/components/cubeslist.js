@@ -14,7 +14,9 @@ const CubesList = () => {
 		const snapshotHandler = (snapshot) => {
 			let dat = [];
 			snapshot.forEach((doc) => {
-				dat.push(doc.data());
+				let curr_data = doc.data();
+				curr_data['id'] = doc.id;
+				dat.push(curr_data);
 			});
 			setCubes(dat);
 		};
@@ -24,7 +26,12 @@ const CubesList = () => {
 	return (
 		<Flex flexDir="column">
 			{cubes.map((cube) => (
-				<ListItem key={cube.last_edited} name={cube.name}></ListItem>
+				<ListItem
+					key={cube.id}
+					data={cube}
+					user_uid={auth.user.uid}
+					name={cube.name}
+				></ListItem>
 			))}
 		</Flex>
 	);

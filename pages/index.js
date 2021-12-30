@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useAuth } from '../lib/auth';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
+import { useState } from 'react';
 
 import {
 	Text,
@@ -12,19 +13,25 @@ import {
 	Divider
 } from '@chakra-ui/react';
 
-import Signin from './components/signin';
-import Dashboard from './components/dashboard';
+import Go from './components/go';
 import Loading from './components/loading';
+import Signin from './components/signin';
 
 const Home = () => {
 	const auth = useAuth();
+	const router = useRouter();
+	const [count, setCount] = useState(0);
 
 	if (auth?.user === '') {
 		return <Loading />;
 	} else if (auth?.user == false) {
 		return <Signin />;
 	} else {
-		return <Dashboard />;
+		if (count == 0) {
+			router.push(`/users/${auth.user.uid}`);
+			setCount(1);
+		}
+		return <Go />;
 	}
 };
 
