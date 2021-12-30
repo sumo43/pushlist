@@ -2,30 +2,28 @@ import { Flex } from '@chakra-ui/react';
 import ListItem from './listitem';
 import { useCubes } from '../../lib/cubes';
 import { useAuth } from '../../lib/auth';
-import { useEffect } from 'react';
+import { getCubes } from '../../lib/db';
+import { useState, useEffect, useRef } from 'react';
 
 const CubesList = () => {
-	const cubes = useCubes();
+	const [cubes, setCubes] = useState([]);
 	const auth = useAuth();
-
-	cubes.setUid(auth.user.uid);
-	const cubes_list = [];
+	const countRef = useRef(0);
 
 	useEffect(() => {
-		cubes_list = cubes.cubes;
-	});
+		const updateCubesData = async () => {
+			const firebase_cubes_data = [1, 2, 3];
+			const cubeslist = firebase_cubes_data.map((cube) => {
+				<ListItem>cube</ListItem>;
+			});
+			setCubes(cubeslist);
+			console.log(cubes);
+			countRef++;
+		};
+		updateCubesData();
+	}, []);
 
-	const updateCubesList = () => {
-		cubes_list = cubes.cubes.map((cube) => {
-			return <ListItem>{cube.name}</ListItem>;
-		});
-	};
-
-	useEffect(() => {
-		updateCubesList;
-	});
-
-	return <Flex>{cubes_list}</Flex>;
+	return <Flex>{cubes}</Flex>;
 };
 
 export default CubesList;
