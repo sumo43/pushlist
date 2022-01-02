@@ -8,10 +8,7 @@ import {
 	Divider
 } from '@chakra-ui/react';
 
-import { useAuth } from '../../lib/auth';
-
 const Loading = () => {
-	const auth = useAuth();
 	return (
 		<Box>
 			<Flex

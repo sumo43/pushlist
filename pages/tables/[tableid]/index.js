@@ -7,9 +7,15 @@ import {
 	Heading,
 	Divider
 } from '@chakra-ui/react';
+import Table from '../../components/table';
+import Wrapper from '../../components/wrapper';
 
-const Table = () => {
-	return <Box>AAA</Box>;
+const TableDashboard = () => {
+	return (
+		<Wrapper>
+			<Table />
+		</Wrapper>
+	);
 };
 
-export default Table;
+export default TableDashboard;
