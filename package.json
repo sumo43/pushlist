@@ -1,6 +1,6 @@
 {
-  "name": "nextjs",
-  "version": "1.0.0",
+  "name": "pushlist",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,21 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/core": "^0.8.0",
-    "@chakra-ui/react": "^1.7.3",
-    "@emotion/core": "^11.0.0",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
-    "chakra-ui": "^0.3.9",
-    "emotion-theming": "^11.0.0",
-    "firebase": "^9.6.1",
-    "framer-motion": "^4",
-    "next": "^12.0.7",
+    "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "eslint": "7.32.0",
-    "eslint-config-next": "11.1.0"
+    "eslint": "8.9.0",
+    "eslint-config-next": "12.1.0"
   }
 }
