@@ -46,8 +46,8 @@ const useProvideUser = () => {
         const provider = new GoogleAuthProvider()
         try {
             const result = await signInWithPopup(auth, provider)
-            setUsercheck(1)
             setUser(result.user)
+            setUsercheck(1)
         }
         catch(exception) {
             setUsercheck(2)
@@ -58,6 +58,7 @@ const useProvideUser = () => {
     const signout = async () => {
         const res = await signOut(auth)
         setUsercheck(0)
+        setUser(null)
     }
 
     return {
