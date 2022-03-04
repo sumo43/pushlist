@@ -14,7 +14,7 @@ import {
     orderBy,
 } from "firebase/firestore";
 
-const createUser = async (uid, data) => {
+const addUser = async (uid, data) => {
     const col = collection(client, "users");
     const doc_ref = doc(client, "users", uid);
     const document = setDoc(doc_ref, { uid: data }, { merge: true });
@@ -37,7 +37,7 @@ const pushCube = async (cube) => {
     addDoc(col, cube);
 };
 
-const getCubes = async (uid, snapshotHandler) => {
+const getTodos = async (uid, snapshotHandler) => {
     const col = collection(client, "cubes");
     const q = query(col, where("uid", "==", uid), orderBy("timestamp", "asc"));
     const snap = onSnapshot(q, snapshotHandler);
@@ -50,4 +50,18 @@ const saveCube = (name, desc, uid, setActive) => {
     pushCube(cube);
 };
 
-export { createUser, pushCube, getCubes, saveCube };
+const createTodo = (name, desc, uid) => {
+    const cube = {
+        name,
+        desc,
+        uid,
+    };
+    return cube;
+};
+
+const pushTodoDB = (uid, data) => {
+    const col = collection(client, "todos");
+    const document = addDoc(col, data, { merge: true });
+};
+
+export { addUser, createTodo, pushTodoDB };

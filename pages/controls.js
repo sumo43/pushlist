@@ -7,11 +7,43 @@ import {
     Spacer,
     Link,
     VStack,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    Input,
+    Textarea,
 } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
+import { setLogLevel } from "firebase/app";
+import { useEffect, useRef } from "react";
+import Loading from "./components/loading";
+import { useUser } from "../util/auth";
+import { createTodo } from "../util/db";
 
-const Controls = (props) => {
+const PushButton = () => {
+    const user = useUser();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const refTitle = useRef();
+    const refDescription = useRef();
+
+    const onSubmit = async () => {
+        onClose();
+        const title = refTitle.current.value;
+        const desc = refDescription.current.value;
+        const uid = user.user.uid;
+
+        const obj = createTodo(title, desc, uid);
+        user.pushTodo(uid, obj);
+    };
+    if (user.userCheck != 1) {
+        return <Loading />;
+    }
     return (
-        <Flex p="10" maxWidth="1000" borderRadius={"10"}>
+        <>
             <Button
                 size="lg"
                 p="35"
@@ -20,9 +52,41 @@ const Controls = (props) => {
                 backgroundColor="red.500"
                 color="white"
                 boxShadow="dark-lg"
+                onClick={onOpen}
             >
                 Push
             </Button>
+            <Modal isOpen={isOpen}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Push a new item</ModalHeader>
+                    <ModalCloseButton onClick={onClose} />
+                    <ModalBody>
+                        <Input ref={refTitle} placeholder="Title" mb="4" />
+                        <Textarea
+                            ref={refDescription}
+                            placeholder="Description"
+                            height="200"
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="red" onClick={onClose} mr="5">
+                            Close
+                        </Button>
+                        <Button colorScheme="teal" onClick={onSubmit}>
+                            Submit
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
+    );
+};
+
+const Controls = (props) => {
+    return (
+        <Flex p="10" borderRadius={"10"}>
+            <PushButton />
             <Button
                 size="lg"
                 p="35"

@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 
 import { getDocs } from "firebase/firestore";
+import { addUser, pushTodoDB } from "./db";
 
 const userContext = createContext();
 
@@ -42,13 +43,17 @@ const useProvideUser = () => {
     const [list, setList] = useState([]);
     const auth = getAuth();
 
+    const pushTodo = (uid, data) => {
+        pushTodoDB(uid, data);
+    };
+
     const setUserInFirebase = async (user) => {
-        console.log(user);
-        user_obj = Object();
-        user_obj.uid = user.uid;
+        const uid = user.uid;
+        const user_obj = Object();
+        user_obj.uid = uid;
         user_obj.displayName = user.displayName;
         user_obj.email = user.email;
-
+        addUser(uid, user_obj);
         return;
     };
 
@@ -57,8 +62,10 @@ const useProvideUser = () => {
         try {
             const result = await signInWithPopup(auth, provider);
             //const fb_result = await setUserInFirebase(result.user);
-            setUser(result.user);
+            const user = result.user;
+            setUser(user);
             setUsercheck(1);
+            setUserInFirebase(user);
         } catch (exception) {
             setUsercheck(2);
             return;
@@ -74,6 +81,7 @@ const useProvideUser = () => {
     };
 
     return {
+        pushTodo,
         userCheck,
         user,
         listCheck,

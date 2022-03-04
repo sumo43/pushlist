@@ -17,23 +17,19 @@ import { useEffect } from "react";
 import Todo from "./todo";
 import Controls from "./controls";
 import NoTodos from "./notodos";
-
-const Loading = () => {
-    return <p>Loading...</p>;
-};
+import PushModal from "./pushmodal";
+import Loading from "./components/loading";
 
 export default function Main() {
     const user = useUser();
 
-    useEffect(async () => {
-        if (user.userCheck == 1) {
-            console.log(user);
-        }
-    }, []);
+    useEffect(async () => {}, []);
 
     const handleSignout = async () => {
         await user.signout();
     };
+
+    const onPush = async () => {};
 
     if (user.userCheck == 1) {
         return (
