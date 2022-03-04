@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 
 import { getDocs } from "firebase/firestore";
-import { addUser, pushTodoDB } from "./db";
+import { addUser, getTodosDB, pushTodoDB } from "./db";
 
 const userContext = createContext();
 
@@ -41,10 +41,23 @@ const useProvideUser = () => {
     const [user, setUser] = useState(null);
     const [listCheck, setListCheck] = useState(0);
     const [list, setList] = useState([]);
+    const [currentTodo, setCurrentTodo] = useState(undefined);
     const auth = getAuth();
 
     const pushTodo = (uid, data) => {
         pushTodoDB(uid, data);
+    };
+
+    const getTodos = async () => {
+        if (userCheck == 1) {
+            const arr = await getTodosDB(user.uid, undefined);
+            setList(arr);
+            // this is stupid
+            const len = arr.length - 1;
+            arr = arr.reverse();
+            setCurrentTodo(arr[len]);
+            setListCheck(1);
+        }
     };
 
     const setUserInFirebase = async (user) => {
@@ -82,6 +95,8 @@ const useProvideUser = () => {
 
     return {
         pushTodo,
+        getTodos,
+        currentTodo,
         userCheck,
         user,
         listCheck,

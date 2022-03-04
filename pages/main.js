@@ -23,13 +23,15 @@ import Loading from "./components/loading";
 export default function Main() {
     const user = useUser();
 
-    useEffect(async () => {}, []);
+    useEffect(async () => {
+        if (user.userCheck == 1) {
+            user.getTodos();
+        }
+    }, []);
 
     const handleSignout = async () => {
         await user.signout();
     };
-
-    const onPush = async () => {};
 
     if (user.userCheck == 1) {
         return (
@@ -78,7 +80,11 @@ export default function Main() {
                     </Flex>
                     <Flex m="100" justifyContent={"center"}>
                         <VStack>
-                            <Todo />
+                            {user.listCheck == 1 ? (
+                                <Todo todo={user.currentTodo} />
+                            ) : (
+                                <NoTodos />
+                            )}
                             <Controls />
                         </VStack>
                     </Flex>

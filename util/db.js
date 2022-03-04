@@ -37,11 +37,16 @@ const pushCube = async (cube) => {
     addDoc(col, cube);
 };
 
-const getTodos = async (uid, snapshotHandler) => {
-    const col = collection(client, "cubes");
-    const q = query(col, where("uid", "==", uid), orderBy("timestamp", "asc"));
-    const snap = onSnapshot(q, snapshotHandler);
-    return snap;
+const getTodosDB = async (uid, snapshotHandler) => {
+    const col = collection(client, "todos");
+    const q = query(
+        col,
+        where("uid", "==", uid, orderBy("time_created", "asc"))
+    );
+    const docs = await getDocs(q);
+    const arr = [];
+    docs.forEach((doc) => arr.push(doc.data()));
+    return arr;
 };
 
 const saveCube = (name, desc, uid, setActive) => {
@@ -56,6 +61,10 @@ const createTodo = (name, desc, uid) => {
         desc,
         uid,
     };
+    const curr_time = new Date().toISOString();
+    const curr_time_millis = Date.now();
+    cube.time_created = curr_time_millis;
+    cube.time_human = curr_time;
     return cube;
 };
 
@@ -64,4 +73,4 @@ const pushTodoDB = (uid, data) => {
     const document = addDoc(col, data, { merge: true });
 };
 
-export { addUser, createTodo, pushTodoDB };
+export { addUser, getTodosDB, createTodo, pushTodoDB };
