@@ -132,6 +132,9 @@ const useProvideUser = () => {
         const res = await signOut(auth);
         setUsercheck(0);
         setUser(null);
+        setList([]);
+        setListCheck(false);
+        setCurrentTodo(undefined);
     };
 
     return {

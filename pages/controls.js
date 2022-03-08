@@ -49,7 +49,7 @@ const PushButton = () => {
                 p="35"
                 borderRadius="15"
                 mr="10"
-                backgroundColor="red.500"
+                backgroundColor="green.500"
                 color="white"
                 boxShadow="dark-lg"
                 onClick={onOpen}
@@ -96,7 +96,7 @@ const PopButton = () => {
                 p="35"
                 borderRadius="15"
                 mr="10"
-                backgroundColor="green.500"
+                backgroundColor="red.500"
                 color="white"
                 boxShadow="dark-lg"
                 onClick={user.pop.bind(this)}
