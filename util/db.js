@@ -12,6 +12,7 @@ import {
     getDocs,
     onSnapshot,
     orderBy,
+    deleteDoc,
 } from "firebase/firestore";
 
 const addUser = async (uid, data) => {
@@ -32,45 +33,45 @@ const addUser = async (uid, data) => {
  * }
  */
 
-const pushCube = async (cube) => {
-    const col = collection(client, "cubes");
-    addDoc(col, cube);
-};
-
-const getTodosDB = async (uid, snapshotHandler) => {
+const getTodosDB = async (uid) => {
     const col = collection(client, "todos");
     const q = query(
         col,
-        where("uid", "==", uid, orderBy("time_created", "asc"))
+        where("uid", "==", uid),
+        orderBy("time_created", "desc")
     );
     const docs = await getDocs(q);
     const arr = [];
-    docs.forEach((doc) => arr.push(doc.data()));
+    docs.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        arr.push(data);
+    });
     return arr;
 };
 
-const saveCube = (name, desc, uid, setActive) => {
-    setActive(false);
-    const cube = createCube(name, desc, uid);
-    pushCube(cube);
+const deleteTodoDB = async (id) => {
+    await deleteDoc(doc(client, "todos", id));
+    return;
 };
 
 const createTodo = (name, desc, uid) => {
-    const cube = {
+    const todo = {
         name,
         desc,
         uid,
     };
     const curr_time = new Date().toISOString();
     const curr_time_millis = Date.now();
-    cube.time_created = curr_time_millis;
-    cube.time_human = curr_time;
-    return cube;
+    todo.time_created = curr_time_millis;
+    todo.time_human = curr_time;
+    return todo;
 };
 
-const pushTodoDB = (uid, data) => {
+const pushTodoDB = async (data, callbackHandler) => {
     const col = collection(client, "todos");
-    const document = addDoc(col, data, { merge: true });
+    const document = await addDoc(col, data, { merge: true });
+    callbackHandler();
 };
 
-export { addUser, getTodosDB, createTodo, pushTodoDB };
+export { addUser, getTodosDB, createTodo, pushTodoDB, deleteTodoDB };

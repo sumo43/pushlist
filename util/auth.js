@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 
 import { getDocs } from "firebase/firestore";
-import { addUser, getTodosDB, pushTodoDB } from "./db";
+import { addUser, getTodosDB, pushTodoDB, deleteTodoDB } from "./db";
 
 const userContext = createContext();
 
@@ -36,25 +36,61 @@ export const useUser = () => {
 
 const useProvideUser = () => {
     // the user is null when not set yet, "" when there is an error, otherwise is a normal object
-    // 0 not logged in, 1 logged in successfully, 3 error
+    // 0 not logged in, 1 logged in successfully, 2 error
     const [userCheck, setUsercheck] = useState(0);
     const [user, setUser] = useState(null);
     const [listCheck, setListCheck] = useState(0);
     const [list, setList] = useState([]);
     const [currentTodo, setCurrentTodo] = useState(undefined);
+    const [listEmpty, setListEmpty] = useState(false);
     const auth = getAuth();
 
-    const pushTodo = (uid, data) => {
-        pushTodoDB(uid, data);
+    const debug = () => {
+        console.log("user: ", user);
+        console.log("list: ", list);
+        console.log("currentTodo: ", currentTodo);
+        console.log("currentTodoCheck: ", currentTodoCheck);
+        console.log("listEmpty: ", listEmpty);
+        console.log("userCheck: ", userCheck);
+        console.log("listEmpty: ", listEmpty);
+    };
+
+    function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    const pushCallback = async () => {
+        await getTodos();
+    };
+
+    const pushTodo = async (uid, data) => {
+        pushTodoDB(data, pushCallback);
+    };
+
+    const handleEmptyList = () => {
+        setList([]);
+        setListCheck(1);
+        setListEmpty(true);
     };
 
     const getTodos = async () => {
         if (userCheck == 1) {
             const arr = await getTodosDB(user.uid, undefined);
+            console.log(arr);
+            if (arr.length == 0) {
+                handleEmptyList();
+                return;
+            }
             setList(arr);
             // this is stupid
             const len = arr.length - 1;
-            arr = arr.reverse();
+
+            if (len >= 0) {
+                setListEmpty(false);
+            } else {
+                setListEmpty(true);
+            }
+            arr.reverse();
             setCurrentTodo(arr[len]);
             setListCheck(1);
         }
@@ -85,7 +121,12 @@ const useProvideUser = () => {
         }
     };
 
-    const getList = async () => {};
+    const pop = async () => {
+        if (!listEmpty) {
+            await deleteTodoDB(currentTodo.id);
+            await getTodos();
+        }
+    };
 
     const signout = async () => {
         const res = await signOut(auth);
@@ -94,6 +135,7 @@ const useProvideUser = () => {
     };
 
     return {
+        pop,
         pushTodo,
         getTodos,
         currentTodo,
@@ -101,6 +143,7 @@ const useProvideUser = () => {
         user,
         listCheck,
         list,
+        listEmpty,
         signin,
         signout,
     };

@@ -9,7 +9,7 @@ import {
     VStack,
 } from "@chakra-ui/react";
 
-const NoTodos = (props) => {
+const LoadingTodos = (props) => {
     return (
         <VStack
             backgroundColor="teal.100"
@@ -17,9 +17,9 @@ const NoTodos = (props) => {
             maxWidth="1000"
             borderRadius={"10"}
         >
-            <Text fontSize="3xl">You have not added any todos. </Text>
+            <Text fontSize="3xl">Loading...</Text>
         </VStack>
     );
 };
 
-export default NoTodos;
+export default LoadingTodos;

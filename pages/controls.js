@@ -83,10 +83,14 @@ const PushButton = () => {
     );
 };
 
-const Controls = (props) => {
+const PopButton = () => {
+    const user = useUser();
+
+    if (user.userCheck != 1) {
+        return <Loading />;
+    }
     return (
-        <Flex p="10" borderRadius={"10"}>
-            <PushButton />
+        <>
             <Button
                 size="lg"
                 p="35"
@@ -95,9 +99,19 @@ const Controls = (props) => {
                 backgroundColor="green.500"
                 color="white"
                 boxShadow="dark-lg"
+                onClick={user.pop.bind(this)}
             >
                 Pop
             </Button>
+        </>
+    );
+};
+
+const Controls = (props) => {
+    return (
+        <Flex p="10" borderRadius={"10"}>
+            <PushButton />
+            <PopButton />
         </Flex>
     );
 };

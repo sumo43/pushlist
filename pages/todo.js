@@ -14,10 +14,7 @@ const placeholder_text =
     "page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
 
 const Todo = (props) => {
-    useEffect(() => {
-        console.log("props");
-        console.log(props.todo);
-    }, []);
+    useEffect(() => {}, []);
     return (
         <VStack
             backgroundColor="teal.100"

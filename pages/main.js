@@ -19,6 +19,7 @@ import Controls from "./controls";
 import NoTodos from "./notodos";
 import PushModal from "./pushmodal";
 import Loading from "./components/loading";
+import LoadingTodos from "./loadingtodos";
 
 export default function Main() {
     const user = useUser();
@@ -81,9 +82,24 @@ export default function Main() {
                     <Flex m="100" justifyContent={"center"}>
                         <VStack>
                             {user.listCheck == 1 ? (
-                                <Todo todo={user.currentTodo} />
+                                <>
+                                    {user.listEmpty == true ? (
+                                        <NoTodos />
+                                    ) : (
+                                        <Todo todo={user.currentTodo} />
+                                    )}
+                                </>
                             ) : (
                                 <NoTodos />
+                                /** 
+                                <>
+                                    {user.listCheck == 3 ? (
+                                        <LoadingTodos />
+                                    ) : (
+                                        <NoTodos />
+                                    )}
+                                </>
+                                */
                             )}
                             <Controls />
                         </VStack>
