@@ -23,6 +23,7 @@ import { useEffect, useRef } from "react";
 import Loading from "./components/loading";
 import { useUser } from "../util/auth";
 import { createTodo } from "../util/db";
+import DeletedTodo from "./deletedTodo";
 
 const PushButton = () => {
     const user = useUser();
@@ -46,7 +47,7 @@ const PushButton = () => {
         <>
             <Button
                 size="lg"
-                p="35"
+                w="200px"
                 borderRadius="15"
                 mr="10"
                 backgroundColor="green.500"
@@ -56,11 +57,11 @@ const PushButton = () => {
             >
                 Push
             </Button>
-            <Modal isOpen={isOpen}>
+            <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Push a new item</ModalHeader>
-                    <ModalCloseButton onClick={onClose} />
+                    <ModalCloseButton />
                     <ModalBody>
                         <Input ref={refTitle} placeholder="Title" mb="4" />
                         <Textarea
@@ -93,7 +94,7 @@ const PopButton = () => {
         <>
             <Button
                 size="lg"
-                p="35"
+                w="200px"
                 borderRadius="15"
                 mr="10"
                 backgroundColor="red.500"
@@ -107,12 +108,77 @@ const PopButton = () => {
     );
 };
 
+const DeletedButton = () => {
+    const user = useUser();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const refTitle = useRef();
+    const refDescription = useRef();
+    const closeHandler = () => {
+        onClose();
+        return;
+    };
+
+    const onSubmit = async () => {
+        onClose();
+        const title = refTitle.current.value;
+        const desc = refDescription.current.value;
+        const uid = user.user.uid;
+        const obj = createTodo(title, desc, uid);
+        user.pushTodo(uid, obj);
+    };
+    if (user.userCheck != 1) {
+        return <Loading />;
+    }
+    return (
+        <>
+            <Button
+                width="500px"
+                height="100px"
+                size="lg"
+                borderRadius="15"
+                p="10"
+                backgroundColor="blue.200"
+                color="white"
+                boxShadow="dark-lg"
+                onClick={onOpen}
+            >
+                View Deleted
+            </Button>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Deleted Todos</ModalHeader>
+                    <ModalCloseButton />
+                    <Flex justifyContent={"center"}>
+                        <VStack h="500px" overflow="scroll">
+                            {user.deletedTodos.map((todo, index) => {
+                                return <DeletedTodo key={index} todo={todo} />;
+                            })}
+                        </VStack>
+                    </Flex>
+                </ModalContent>
+            </Modal>
+        </>
+    );
+};
+
 const Controls = (props) => {
     return (
-        <Flex p="10" borderRadius={"10"}>
-            <PushButton />
-            <PopButton />
-        </Flex>
+        <VStack alignContent={"center"}>
+            <Flex
+                p="20"
+                borderRadius={"10"}
+                width="500px"
+                alignContent="center"
+                justifyContent="center"
+            >
+                <PushButton />
+                <PopButton />
+            </Flex>
+            <Flex>
+                <DeletedButton />
+            </Flex>
+        </VStack>
     );
 };
 

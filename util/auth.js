@@ -11,7 +11,13 @@ import {
 } from "firebase/auth";
 
 import { getDocs } from "firebase/firestore";
-import { addUser, getTodosDB, pushTodoDB, deleteTodoDB } from "./db";
+import {
+    addUser,
+    getTodosDB,
+    pushTodoDB,
+    deleteTodoDB,
+    getDeletedDB,
+} from "./db";
 
 const userContext = createContext();
 
@@ -43,6 +49,9 @@ const useProvideUser = () => {
     const [list, setList] = useState([]);
     const [currentTodo, setCurrentTodo] = useState(undefined);
     const [listEmpty, setListEmpty] = useState(false);
+
+    const [deletedTodos, setDeletedTodos] = useState([]);
+    const [deletedTodosCheck, setDeletedTodosCheck] = useState(0);
     const auth = getAuth();
 
     const debug = () => {
@@ -93,6 +102,10 @@ const useProvideUser = () => {
             arr.reverse();
             setCurrentTodo(arr[len]);
             setListCheck(1);
+
+            const deleted_arr = await getDeletedDB(user.uid);
+            setDeletedTodos(deleted_arr);
+            setDeletedTodosCheck(1);
         }
     };
 
@@ -123,7 +136,7 @@ const useProvideUser = () => {
 
     const pop = async () => {
         if (!listEmpty) {
-            await deleteTodoDB(currentTodo.id);
+            await deleteTodoDB(currentTodo.id, currentTodo);
             await getTodos();
         }
     };
@@ -135,12 +148,16 @@ const useProvideUser = () => {
         setList([]);
         setListCheck(false);
         setCurrentTodo(undefined);
+
+        setDeletedTodos([]);
+        setDeletedTodosCheck(0);
     };
 
     return {
         pop,
         pushTodo,
         getTodos,
+        deletedTodos,
         currentTodo,
         userCheck,
         user,

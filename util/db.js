@@ -50,8 +50,35 @@ const getTodosDB = async (uid) => {
     return arr;
 };
 
-const deleteTodoDB = async (id) => {
+const getDeletedDB = async (uid) => {
+    const col = collection(client, "deleted");
+    const q = query(
+        col,
+        where("uid", "==", uid),
+        orderBy("time_deleted", "desc")
+    );
+    const docs = await getDocs(q);
+    const arr = [];
+    docs.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        arr.push(data);
+    });
+    return arr;
+};
+
+const addDeleted = async (id, obj) => {
+    const curr_time = new Date().toISOString();
+    const curr_time_millis = Date.now();
+    obj.time_deleted = curr_time_millis;
+    const col = collection(client, "deleted");
+    const document = await addDoc(col, obj, { merge: true });
+    return;
+};
+
+const deleteTodoDB = async (id, obj) => {
     await deleteDoc(doc(client, "todos", id));
+    await addDeleted(id, obj);
     return;
 };
 
@@ -74,4 +101,11 @@ const pushTodoDB = async (data, callbackHandler) => {
     callbackHandler();
 };
 
-export { addUser, getTodosDB, createTodo, pushTodoDB, deleteTodoDB };
+export {
+    addUser,
+    getTodosDB,
+    getDeletedDB,
+    createTodo,
+    pushTodoDB,
+    deleteTodoDB,
+};
