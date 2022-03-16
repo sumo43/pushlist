@@ -82,6 +82,11 @@ const deleteTodoDB = async (id, obj) => {
     return;
 };
 
+const deleteTodoDeleted = async (id) => {
+    await deleteDoc(doc(client, "deleted", id));
+    return;
+};
+
 const createTodo = (name, desc, uid) => {
     const todo = {
         name,
@@ -108,4 +113,5 @@ export {
     createTodo,
     pushTodoDB,
     deleteTodoDB,
+    deleteTodoDeleted,
 };

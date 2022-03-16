@@ -41,6 +41,11 @@ const DeletedTodo = (props) => {
                     {props.todo ? props.todo.desc : "Some Text"}
                 </Text>
             </Flex>
+            <Flex>
+                <Button onClick={() => props.onRestore(props.todo)}>
+                    Restore
+                </Button>
+            </Flex>
         </VStack>
     );
 };

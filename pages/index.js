@@ -11,17 +11,17 @@ import {
 } from "@chakra-ui/react";
 import { useUser } from "../util/auth";
 import { useEffect } from "react";
-import Router from "next/router";
 import Main from "./main";
 
 const SigninPage = (props) => {
+    const user = useUser();
+
+    useEffect(async () => {
+        user.trySignin();
+    }, []);
+
     return (
         <div className={styles.container}>
-            <Head>
-                <title>Pushlist</title>
-                <meta name="description" content="pushlist todo list" />
-            </Head>
-
             <main className={styles.main}>
                 <div className={styles.description}>
                     <Text fontSize="6xl" fontWeight="bold">

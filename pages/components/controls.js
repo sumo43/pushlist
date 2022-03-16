@@ -20,9 +20,9 @@ import {
 import { useDisclosure } from "@chakra-ui/react";
 import { setLogLevel } from "firebase/app";
 import { useEffect, useRef } from "react";
-import Loading from "./components/loading";
-import { useUser } from "../util/auth";
-import { createTodo } from "../util/db";
+import Loading from "./loading";
+import { useUser } from "../../util/auth";
+import { createTodo } from "../../util/db";
 import DeletedTodo from "./deletedTodo";
 
 const PushButton = () => {
@@ -126,6 +126,9 @@ const DeletedButton = () => {
         const obj = createTodo(title, desc, uid);
         user.pushTodo(uid, obj);
     };
+    const onRestore = async (todo) => {
+        user.restore(todo);
+    };
     if (user.userCheck != 1) {
         return <Loading />;
     }
@@ -152,7 +155,13 @@ const DeletedButton = () => {
                     <Flex justifyContent={"center"}>
                         <VStack h="500px" overflow="scroll">
                             {user.deletedTodos.map((todo, index) => {
-                                return <DeletedTodo key={index} todo={todo} />;
+                                return (
+                                    <DeletedTodo
+                                        key={index}
+                                        onRestore={onRestore}
+                                        todo={todo}
+                                    />
+                                );
                             })}
                         </VStack>
                     </Flex>

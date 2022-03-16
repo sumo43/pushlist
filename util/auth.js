@@ -4,10 +4,11 @@ import {
     getAuth,
     signInWithPopup,
     GoogleAuthProvider,
-    onAuthStateChanged,
     signOut,
-    getAdditionalUserInfo,
-    createUserWithEmailAndPassword,
+    setPersistence,
+    browserSessionPersistence,
+    inMemoryPersistence,
+    onAuthStateChanged,
 } from "firebase/auth";
 
 import { getDocs } from "firebase/firestore";
@@ -17,6 +18,7 @@ import {
     pushTodoDB,
     deleteTodoDB,
     getDeletedDB,
+    deleteTodoDeleted,
 } from "./db";
 
 const userContext = createContext();
@@ -82,6 +84,21 @@ const useProvideUser = () => {
         setListEmpty(true);
     };
 
+    const restore = async (todo) => {
+        // delete from deleted
+        const id = todo.id;
+        const uid = todo.uid;
+
+        await deleteTodoDeleted(id, uid);
+
+        const curr_time = new Date().toISOString();
+        const curr_time_millis = Date.now();
+        todo.time_created = curr_time_millis;
+        todo.time_human = curr_time;
+
+        pushTodoDB(todo, pushCallback);
+    };
+
     const getTodos = async () => {
         if (userCheck == 1) {
             const arr = await getTodosDB(user.uid, undefined);
@@ -125,13 +142,29 @@ const useProvideUser = () => {
             const result = await signInWithPopup(auth, provider);
             //const fb_result = await setUserInFirebase(result.user);
             const user = result.user;
-            setUser(user);
-            setUsercheck(1);
-            setUserInFirebase(user);
+            handleUser(user);
         } catch (exception) {
             setUsercheck(2);
             return;
         }
+    };
+
+    const handleUser = (user) => {
+        setUser(user);
+        setUsercheck(1);
+        setUserInFirebase(user);
+    };
+
+    const trySignin = async () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                try {
+                    handleUser(user);
+                } catch (exception) {
+                    setUsercheck(2);
+                }
+            }
+        });
     };
 
     const pop = async () => {
@@ -142,6 +175,7 @@ const useProvideUser = () => {
     };
 
     const signout = async () => {
+        const auth = getAuth();
         const res = await signOut(auth);
         setUsercheck(0);
         setUser(null);
@@ -164,6 +198,8 @@ const useProvideUser = () => {
         listCheck,
         list,
         listEmpty,
+        trySignin,
+        restore,
         signin,
         signout,
     };

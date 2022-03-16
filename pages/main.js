@@ -14,12 +14,10 @@ import {
 import { useUser } from "../util/auth";
 import Router from "next/router";
 import { useEffect } from "react";
-import Todo from "./todo";
-import Controls from "./controls";
-import NoTodos from "./notodos";
-import PushModal from "./pushmodal";
+import Todo from "./components/todo";
+import Controls from "./components/controls";
+import NoTodos from "./components/notodos";
 import Loading from "./components/loading";
-import LoadingTodos from "./loadingtodos";
 
 export default function Main() {
     const user = useUser();
